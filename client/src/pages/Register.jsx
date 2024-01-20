@@ -22,6 +22,12 @@ const Register = () => {
     
   }
 
+  useEffect(()=>{
+    if(localStorage.getItem("chat-app-user")){
+      navigate("/");
+    }
+  },[])
+
   const handleSubmit = async(e)=>{
     
     e.preventDefault();
@@ -30,7 +36,7 @@ const Register = () => {
       const {password, username, email} = values;
       const {data} = await axios.post(registerRoute,{
         username,email,password
-      });
+      }); 
 
       if(data.status===false){
         toast.error(data.msg,toastOptions);
@@ -73,6 +79,7 @@ const Register = () => {
             <img src={Logo} alt="Logo" />
             <h1>LetsChat</h1>
           </div>
+          <hr/>
 
           <input type='text' placeholder='Username' name='username' onChange={(e)=>handleChange(e)}/>
           <input type='email' placeholder='Email' name='email' onChange={(e)=>handleChange(e)}/>
@@ -81,6 +88,7 @@ const Register = () => {
    
           <button type="submit">Create User</button>
           <span>Already a user?  <Link to="/login"> Login</Link></span>
+          <hr/>
         </form>
       </FormContainer>
         <ToastContainer/>
@@ -124,13 +132,13 @@ const FormContainer = styled.div`
   input{
     background-color:transparent;
     padding:1rem;
-    border:0.1rem solid #4e0eff;
+    border:0.1rem inset #4e0eff;
     border-radius:0.4rem;
-    color: white;
+    color:white;
     width:100%;
-    font-size:1rem;
+    font-size:1.2rem;
     &:focus{
-      border: 0.1rem solid #997af0;
+      border: 0.18rem outset #4e0eff;
       outline:none;
     }
   }
