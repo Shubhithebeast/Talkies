@@ -3,7 +3,6 @@ import { Link ,useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 import Logo from "../assets/logo.svg"
 import {ToastContainer,toast} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { registerRoute } from '../utils/APIRoutes';
 
@@ -13,6 +12,7 @@ const Register = () => {
     username:"",email:"",password:"",confirmPassword:""
   })
 
+  // parameter use for customize toast or notifications
   const toastOptions={
       position:"bottom-right",
       autoClose:8000,
@@ -23,6 +23,8 @@ const Register = () => {
   }
 
   useEffect(()=>{
+    // if data is stored in localstorage , means user is already logined
+    // simply move to chat page
     if(localStorage.getItem("chat-app-user")){
       navigate("/");
     }
@@ -38,15 +40,21 @@ const Register = () => {
         username,email,password
       }); 
 
+      //react-toastify is a node.js library, helps to display notifications or toasts in a clean and customizable way
+      // we can  customize the appearance and behavior of the toasts by passing options as parameters like i did toastOptions
+
       if(data.status===false){
         toast.error(data.msg,toastOptions);
       }
+      // whenever oour data is ok, will store in localstorage(its a storage in our server);
       if(data.status===true){
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
         navigate("/");
       }
     };
   }
+
+  // handling form input validation and showing toast if there is error
 
   const handleValidation = () =>{
     const {password, confirmPassword, username, email} = values;
@@ -67,6 +75,7 @@ const Register = () => {
     return true;
   }
 
+  // whenver input field is change , state will update with new values
   const handleChange = (e) =>{
     setValues({...values,[e.target.name]:e.target.value});
   }
@@ -96,6 +105,8 @@ const Register = () => {
     )
   }
   
+  // using here styled-components library
+  // helps to write css in js, with its in-built addtional fetaures
 const FormContainer = styled.div`
   height:100vh;
   width:100vw;
@@ -152,9 +163,10 @@ const FormContainer = styled.div`
     cursor:pointer;
     border-radius:0.4rem;
     font-size:1rem;
-    text-transform:uppercase;
+    transition: 0.5s transform ease-in-out;
     &:hover{
-      background-color:#541bf0d2;
+        ${'' /* background-color:#541bf0d2; */}
+        transform:scale(1.05);
     }
 
   }

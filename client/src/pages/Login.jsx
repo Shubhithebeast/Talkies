@@ -3,7 +3,6 @@ import Logo from "../assets/logo.svg"
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast,ToastContainer } from 'react-toastify'
-import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios'
 import {loginRoute} from '../utils/APIRoutes';
 
@@ -148,12 +147,14 @@ const FormContainer = styled.div`
   border:none;
   ${'' /* border: 0.1rem groove white; */}
   font-weight:bold;
-  cursor:pointer;
+  cursor:pointer; 
   border-radius:0.4rem;
   font-size:1rem;
   text-transform:uppercase;
+  transition: 0.5s transform ease-in-out;
   &:hover{
-    background-color:#541bf0d2;
+      ${'' /* background-color:#541bf0d2; */}
+      transform:scale(1.05);
   }
  }
 
