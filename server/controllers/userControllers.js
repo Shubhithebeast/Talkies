@@ -19,10 +19,15 @@ module.exports.register = async(req,res,next)=>{
     const user = User.create({
         email,username,password:hashPassword,
     });
+    console.log("userController register:",user);
+    console.log("username,email,pass: ",username," ",email," ",password);
 
-    // delete user.password;
-    return res.json({status:true,msg:"User created ",user});
+    delete user.password;
+    console.log("user,email,pass: ",username," ",email," ",password);
+    
+    return res.json({status:true,user});
     }catch(error){
+    console.log("username,email,pass: error",username," ",email," ",password);
         next(error);
     }
 
@@ -42,6 +47,7 @@ module.exports.login = async(req,res,next)=>{
             return res.json({msg:"Incorrect Password",status:false});
         }
 
+        delete user.password;
         return res.json({msg:"User Logined",status:true,user});
 
     }catch(error){
@@ -64,6 +70,18 @@ module.exports.setAvatar = async(req,res,next)=>{
             image:userData.avatarImage,
         });
 
+    }catch(error){
+        next(error);
+    } 
+}
+
+
+module.exports.getAllUsers = async (req,res,next) =>{
+    try{
+        const users = await User.find({_id:{$ne:req.params.id}}).select([
+            "email","username","avatarImage","_id",
+        ]);
+        return res.json(users);
     }catch(error){
         next(error);
     }

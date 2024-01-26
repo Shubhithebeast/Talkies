@@ -46,10 +46,11 @@ const Register = () => {
       if(data.status===false){
         toast.error(data.msg,toastOptions);
       }
-      // whenever oour data is ok, will store in localstorage(its a storage in our server);
+      // whenever our data is ok, will store in localStorage (its a storage in our server);
       if(data.status===true){
+        console.log("Register:", data);
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
-        navigate("/");
+        navigate("/login");
       }
     };
   }
@@ -75,7 +76,7 @@ const Register = () => {
     return true;
   }
 
-  // whenver input field is change , state will update with new values
+  // whenever input field is change , state will update with new values
   const handleChange = (e) =>{
     setValues({...values,[e.target.name]:e.target.value});
   }
@@ -106,7 +107,7 @@ const Register = () => {
   }
   
   // using here styled-components library
-  // helps to write css in js, with its in-built addtional fetaures
+  // helps to write css in js, with its in-built additional features
 const FormContainer = styled.div`
   height:100vh;
   width:100vw;

@@ -52,19 +52,24 @@ const SetAvatar = () => {
         }
 
         async function fetchData(){
-            const data = [];
-            for (let i = 0; i < 5; i++) {
-            const image = await axios.get(
-                `${api}/${Math.round(Math.random() * 1000)}`
-            );
-            const buffer = new Buffer(image.data);
-            data.push(buffer.toString("base64"));
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            try{
+                    const data = [];
+                    for (let i = 0; i < 5; i++) {
+                    const image = await axios.get(
+                        `${api}/${Math.round(Math.random() * 1000)}`
+                    );
+                    const buffer = new Buffer(image.data);
+                    data.push(buffer.toString("base64"));
+        
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                    setAvatars(data);
+                    setIsLoading(false);
+            }catch(error){
+                console.log("Error in fetching Avatars",error);
             }
-            setAvatars(data);
-            setIsLoading(false);
         }
+
         fetchData();        
       }, []);
 

@@ -24,6 +24,7 @@ const Login = () => {
 
   useEffect(()=>{
     if(localStorage.getItem("chat-app-user")){
+      // console.log("User already logined...");
       navigate("/");
     }
   },[])
@@ -43,6 +44,7 @@ const Login = () => {
         toast.error(data.msg,toastOptions);
       }
       if(data.status===true){
+        // console.log("User logined...");
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
         navigate("/");
       }
