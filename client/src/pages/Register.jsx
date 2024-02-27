@@ -21,6 +21,7 @@ const Register = () => {
       theme: "dark",
     
   }
+  
 
   useEffect(()=>{
     // if data is stored in localstorage , means user is already logined
@@ -34,8 +35,8 @@ const Register = () => {
     
     e.preventDefault();
     if(handleValidation()){
-      console.log("In handle validation...",registerRoute);
-      const {password, username, email} = values;
+      // console.log("In handle validation...",registerRoute);
+      const { email, username, password } = values;
       const {data} = await axios.post(registerRoute,{
         username,email,password
       }); 
@@ -48,9 +49,11 @@ const Register = () => {
       }
       // whenever our data is ok, will store in localStorage (its a storage in our server);
       if(data.status===true){
-        console.log("Register:", data);
+        console.log("Register:  ")
+        console.log( JSON.stringify(data.user));
+        console.log("........")
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
-        navigate("/login");
+        navigate("/");
       }
     };
   }
@@ -64,10 +67,10 @@ const Register = () => {
       toast.error("Password and Confirm Password must be same",toastOptions);
       return false;
     }else if(username.length<3){
-      toast.error("Username must be greater than 3 chars",toastOptions);
+      toast.error("Username must be longer...",toastOptions);
       return false;
     }else if(password.length<8){
-      toast.error("Password must be greater than 8 chars",toastOptions);
+      toast.error("Password must be longer...",toastOptions);
       return false;
     }else if(email===""){ 
       toast.error("Email is Invalid",toastOptions);

@@ -44,7 +44,9 @@ const Login = () => {
         toast.error(data.msg,toastOptions);
       }
       if(data.status===true){
-        // console.log("User logined...");
+        console.log("login:  ")
+        console.log( JSON.stringify(data.user));
+        console.log("........")
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
         navigate("/");
       }
@@ -55,11 +57,7 @@ const Login = () => {
   const handleValidation = ()=>{
     const {username,password}= values;
 
-    if(password===""){
-      toast.error("Username and Password must be valid",toastOptions);
-      return false;
-    }
-    else if(username===""){
+    if(password==="" || username===""){
       toast.error("Username and Password must be valid",toastOptions);
       return false;
     }

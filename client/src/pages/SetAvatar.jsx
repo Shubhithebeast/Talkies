@@ -25,6 +25,7 @@ const SetAvatar = () => {
     }
 
     const setProfilePicture =  async () =>{
+
         if(selectedAvatar===undefined){
             toast.error("Please select an avatar!",toastOptions);
         }else{
@@ -33,7 +34,7 @@ const SetAvatar = () => {
                 image:avatars[selectedAvatar]
             })
 
-            console.log(data);
+            // console.log(data);
 
             if(data.isSet){
                 user.isAvatarImageSet=true;
@@ -45,6 +46,8 @@ const SetAvatar = () => {
             }
         }
     }
+
+    
 
     useEffect(() => {
         if(!localStorage.getItem("chat-app-user")){
