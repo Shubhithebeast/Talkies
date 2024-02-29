@@ -28,7 +28,7 @@ Follow these steps to get the Let's Chat project up and running on your local ma
 
 1. Clone the repository:
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/Shubhithebeast/LetsChat.git
 
 2. Navigate to the server directory and install dependencies:
    ```bash

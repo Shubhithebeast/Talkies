@@ -16,6 +16,7 @@ module.exports.register = async(req,res,next)=>{
         return res.json({msg:"Email already used",status:false});
 
     const hashPassword = await bcrypt.hash(password,10);
+    // Issue no.2 IssueFaced.md
     const user = await User.create({ 
         email,username,password:hashPassword,
     });

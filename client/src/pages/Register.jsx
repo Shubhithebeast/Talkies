@@ -49,9 +49,9 @@ const Register = () => {
       }
       // whenever our data is ok, will store in localStorage (its a storage in our server);
       if(data.status===true){
-        console.log("Register:  ")
-        console.log( JSON.stringify(data.user));
-        console.log("........")
+        // console.log("Register:  ")
+        // console.log( JSON.stringify(data.user));
+        // console.log("........")
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
         navigate("/");
       }

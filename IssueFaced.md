@@ -66,3 +66,12 @@ The reason  Promise { <pending> } instead of the user data is because the User.c
  const user = await User.create({ 
         email,username,password:hashPassword,
     });
+
+##
+
+### before
+router.get("/allusers:id",getAllUsers);
+### after
+router.get("/allusers/:id",getAllUsers);
+
+srf / ni lagaya tha 😐

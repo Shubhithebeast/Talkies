@@ -74,7 +74,7 @@ const SetAvatar = () => {
         }
 
         fetchData();        
-      }, []);
+      },[]);
 
     return (
         <>

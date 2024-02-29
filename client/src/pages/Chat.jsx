@@ -36,13 +36,15 @@ const Chat = () => {
 
   
   useEffect( () => {
+    console.log("CurrentUser: ",currentUser)
     const fetchData = async () => {
       try {
         if (currentUser) {
           // console.log("currentUser:", currentUser);
           if (currentUser.isAvatarImageSet) {
+            console.log("Inside getallusers.")
             const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-            // console.log("fetch Data of contacts:", data.data);
+            console.log("fetch Data of contacts:", data.data);
             setContacts(data.data);
           } else {
             navigate("/setavatar");
