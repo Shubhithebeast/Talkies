@@ -67,7 +67,7 @@ The reason  Promise { <pending> } instead of the user data is because the User.c
         email,username,password:hashPassword,
     });
 
-##
+## GET Method-> Failed to load resource: the server responded with a status of 404 (Not Found)
 
 ### before
 router.get("/allusers:id",getAllUsers);

@@ -4,12 +4,15 @@ import {useNavigate} from 'react-router-dom';
 import { allUsersRoute } from '../utils/APIRoutes';
 import axios from "axios";
 import Contacts from '../components/Contacts';
+import Welcome from '../components/Welcome';
+import ChatContainer from '../components/ChatContainer';
 
 const Chat = () => {
   const navigate = useNavigate();
   const [contacts,setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat, setCurrentChat] =useState(undefined);
+  const [isLoaded,setIsLoaded]=useState(false);
 
   // Error no.1 IssueFaces.md
   // useEffect(async()=>{
@@ -29,6 +32,7 @@ const Chat = () => {
         navigate("/login");
       }else{
         setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
+        setIsLoaded(true);
       }
     }  
     setUser();
@@ -36,15 +40,15 @@ const Chat = () => {
 
   
   useEffect( () => {
-    console.log("CurrentUser: ",currentUser)
+    // console.log("CurrentUser: ",currentUser)
     const fetchData = async () => {
       try {
         if (currentUser) {
-          // console.log("currentUser:", currentUser);
+          // console.log("currentUser0:", currentUser);
           if (currentUser.isAvatarImageSet) {
-            console.log("Inside getallusers.")
+            // console.log("Inside getallusers.")
             const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-            console.log("fetch Data of contacts:", data.data);
+            // console.log("fetch Data of contacts:", data.data);
             setContacts(data.data);
           } else {
             navigate("/setavatar");
@@ -68,7 +72,18 @@ const Chat = () => {
   return (
     <Container>
       <div className="container">
+      {/* {console.log("CurrentUser1 is: ",currentUser)} */}
         <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange} />
+       {/* {console.log("CurrentUser2 is: ",currentUser.username)} */}
+
+        {
+          isLoaded && currentChat === undefined ? (
+            <Welcome currentUser={currentUser}  />
+          ):
+           (
+            <ChatContainer currentChat={currentChat}  />
+           )
+        }
       </div>
     </Container>
   )

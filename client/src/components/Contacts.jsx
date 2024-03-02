@@ -15,9 +15,12 @@ const Contacts = ({contacts,currentUser, changeChat}) => {
             setCurrentUserName(currentUser.username);
             setCurrentUserImage(currentUser.avatarImage);
         }
-    },[currentUser]);
+    },[currentUser]); 
 
-    const changeCurrentChat = (index,contact)=> {};
+    const changeCurrentChat = (index,contact)=> {
+        setCurrentSelected(index);
+        changeChat(contact);  
+    };
 
 
   return (
@@ -94,13 +97,14 @@ const Container = styled.div`
         overflow:auto;
         gap:0.8rem;
         &::-webkit-scrollbar{
-            width:0.2rem;
+            width:0.3rem;
             &-thumb{
-                background-color:#ffffff39
+                background-color:grey;
                 width:0.1rem;
                 border-radius:1rem;
             }
         }
+        
         .contact{
             background-color:#ffffff34;
             min-height:5rem;
