@@ -7,8 +7,8 @@ const Logout = () => {
     const navigate = useNavigate();
 
     const handleClick =()=>{
-        // localStorage.clear();
-        // navigate("/login");
+        localStorage.clear();
+        navigate("/login");
     }
   return (
     <Button onClick={handleClick}>
