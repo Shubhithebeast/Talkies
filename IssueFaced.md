@@ -75,3 +75,10 @@ router.get("/allusers:id",getAllUsers);
 router.get("/allusers/:id",getAllUsers);
 
 srf / ni lagaya tha 😐
+
+
+## Emoji is printing, value showing Undefined
+
+### Solve 
+emoji-picker-react class changed in new version to EmojiPickerReact, then it will work fine
+and onEmojiClick(handleClick)  , will take handleClick(emoji,event) 

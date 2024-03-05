@@ -8,7 +8,6 @@ const Contacts = ({contacts,currentUser, changeChat}) => {
     const [currentUserImage, setCurrentUserImage] = useState(undefined);
     const [currentSelected, setCurrentSelected] = useState(undefined);
 
-
     useEffect(()=>{
         // console.log("contacts:",contacts) 
         if(currentUser){
@@ -29,7 +28,7 @@ const Contacts = ({contacts,currentUser, changeChat}) => {
             <Container>
                 <div className='brand'>
                     <img src={Logo} alt="Logo" />
-                    <h3>LetsTalk</h3>
+                    <h3>Talkies</h3>
                 </div>
                 <div className='contacts'>
                     {

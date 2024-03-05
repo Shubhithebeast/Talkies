@@ -3,7 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require("./routes/userRoutes")
 const messageRoutes = require("./routes/messagesRoute");
-
+const socket = require("socket.io");
 
 const app = express();
 require("dotenv").config();
@@ -35,4 +35,49 @@ db_connect();
 
 const server = app.listen(PORT,()=>{
     console.log(`Server running on PORT ${PORT}`)
+})
+
+//creating an Socket.io instance ->io by passing server object
+const io = socket(server,{
+    cors:{
+        // Specifies the allowed origins for cross-origin requests. 
+        // allowing requests from the specified origin.
+        origin:"http://localhost:3000",
+
+        // allows sending cookies, HTTP authentication, 
+        // and client-side SSL certificates.
+        credentials:true,
+    },
+});
+
+// map will be used to store online users' IDs and 
+// their corresponding socket IDs.
+global.onlineUsers = new Map();
+
+// listens for incoming socket connections. When a client connects 
+// to the server, the provided callback function is executed
+//  with the socket object representing the connection.
+io.on("connection",(socket)=>{
+    global.chatSocket = socket;
+
+    // listens  "add-user" event from the client. 
+    // When event is received, callback function is executed with the userId
+    socket.on("add-user", (userId)=>{
+        // adding entry in  onlineUsers map,
+        // associating the userId with the socket.id.
+        onlineUsers.set(userId, socket.id);
+    })
+
+    socket.on("send-msg",(data)=>{
+        // console.log("sendmsg",{data});
+
+        // retrieves the socket ID of the recipient user (data.to)  from amp
+        const sendUserSocket = onlineUsers.get(data.to);
+
+        // f the recipient's socket ID is found in the onlineUsers map. 
+        // If the recipient is online further code execute
+        if(sendUserSocket){
+            socket.to(sendUserSocket).emit("msg-receive",data.msg);
+        }
+    })
 })

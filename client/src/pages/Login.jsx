@@ -44,9 +44,9 @@ const Login = () => {
         toast.error(data.msg,toastOptions);
       }
       if(data.status===true){
-        console.log("login:  ")
-        console.log( JSON.stringify(data.user));
-        console.log("........")
+        // console.log("login:  ")
+        // console.log( JSON.stringify(data.user));
+        // console.log("........")
         localStorage.setItem("chat-app-user",JSON.stringify(data.user));
         navigate("/");
       }
