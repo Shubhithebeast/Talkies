@@ -13,7 +13,7 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
     const scrollRef = useRef();
 
     useEffect(()=>{
-        if(currentChat){
+        if(currentChat && currentUser._id){
             async function fetchData(){
                 const response = await axios.post(getAllMessagesRoute,{
                     from:currentUser._id,
@@ -23,7 +23,7 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
             }
             fetchData();
         }
-    },[currentChat]);
+    },[currentChat , currentUser._id]);
 
 
     const handleSendMsg = async (msg)=>{
@@ -57,7 +57,7 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
                 setArrivalMessage({fromSelf:false,message:msg});
             })
         }
-    },[])
+    },[socket])
 
 
     useEffect(()=>{
