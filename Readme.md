@@ -1,4 +1,4 @@
-# Talkies 🚀
+# <a href="https://talkies-shubham.netlify.app/" target="_blank" >QuoteApp</a>🚀
 
 Talkies is a real-time chat application website built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with Socket.io for real-time communication. It features a stylish and interactive interface where users can chat with each other online in real-time.
 
