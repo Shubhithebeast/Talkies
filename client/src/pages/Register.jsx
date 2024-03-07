@@ -85,12 +85,12 @@ const Register = () => {
   }
 
   return (
-    <>
+    <> 
       <FormContainer>
         <form onSubmit={(e)=>handleSubmit(e)}>
           <div className='brand'>
             <img src={Logo} alt="Logo" />
-            <h1>LetsChat</h1>
+            <h1>Talkies</h1>
           </div>
           <hr/>
 

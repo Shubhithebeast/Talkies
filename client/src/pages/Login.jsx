@@ -76,7 +76,7 @@ const Login = () => {
        <form onSubmit={(event) => handleSubmit(event)}>
         <div className='brand'>
           <img src={Logo} alt="Logo" />
-          <h1>LetsChat</h1>
+          <h1>Talkies</h1>
         </div>
           <hr></hr>
 

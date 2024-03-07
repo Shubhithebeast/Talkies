@@ -27,12 +27,13 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
 
 
     const handleSendMsg = async (msg)=>{
+        
         await axios.post(sendMessageRoute, {
-            from: currentUser._id,
             to:currentChat._id,
+            from: currentUser._id,
             message:msg
         })  
-
+        
         socket.current.emit("send-msg",{
             to:currentChat._id,
             from: currentUser._id,
@@ -41,14 +42,18 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
 
         const msgs = [...messages];
         msgs.push({fromSelf:true, message:msg});
+        // console.log("msgs: ",msgs);
         setMessages(msgs);
+        // console.log("send-msg: ",msg);
 
     }
 
     useEffect(()=>{
         if(socket.current){
+            console.log("socket current...");
+
             socket.current.on("msg-receive",(msg)=>{
-                // console.log({msg});
+                console.log({msg});
                 setArrivalMessage({fromSelf:false,message:msg});
             })
         }
@@ -57,11 +62,11 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
 
     useEffect(()=>{
         arrivalMessage && setMessages((prev) => [...prev,arrivalMessage]);
-
+        // console.log("Arrival.msg...",arrivalMessage);
     },[arrivalMessage])
 
     useEffect(()=>{
-        scrollRef.current?.scrollIntoView({ behaviour:"smooth"});
+        scrollRef.current?.scrollIntoView({ behavior:"smooth"});
     },[messages]);
 
   return (

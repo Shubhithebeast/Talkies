@@ -14,8 +14,12 @@ app.use(express.json());
 app.use("/api/auth",userRoutes);
 app.use("/api/messages",messageRoutes);
 
+app.get('/',(req,res)=>{
+    res.send("Hii, I am Working...");
+})
 
-const PORT = process.env.PORT || 5000;
+
+const PORT = process.env.PORT;
 const URL = process.env.MONGO_URL;
 // console.log(URL);
 
@@ -42,7 +46,7 @@ const io = socket(server,{
     cors:{
         // Specifies the allowed origins for cross-origin requests. 
         // allowing requests from the specified origin.
-        origin:"http://localhost:3000",
+        origin:process.env.ORIGIN,
 
         // allows sending cookies, HTTP authentication, 
         // and client-side SSL certificates.
@@ -68,16 +72,21 @@ io.on("connection",(socket)=>{
         onlineUsers.set(userId, socket.id);
     })
 
-    socket.on("send-msg",(data)=>{
-        // console.log("sendmsg",{data});
+    socket.on("send-msg", (data)=>{
+        // console.log("send-msg",{data});
+
+        // console.log("onlineUsers keys:", Array.from(onlineUsers.keys()));
 
         // retrieves the socket ID of the recipient user (data.to)  from amp
-        const sendUserSocket = onlineUsers.get(data.to);
+        const sendUserSocket =  onlineUsers.get(data.to);
+        // console.log("sendUserSocket",sendUserSocket);
+
 
         // f the recipient's socket ID is found in the onlineUsers map. 
         // If the recipient is online further code execute
         if(sendUserSocket){
+            // console.log("inside sendUserSocket");
             socket.to(sendUserSocket).emit("msg-receive",data.msg);
         }
-    })
+    }) 
 })

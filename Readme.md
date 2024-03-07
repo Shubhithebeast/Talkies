@@ -1,6 +1,6 @@
-# Let's Chat 🚀
+# Talkies 🚀
 
-Let's Chat is a real-time chat application website built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with Socket.io for real-time communication. It features a stylish and interactive interface where users can chat with each other online in real-time.
+Talkies is a real-time chat application website built using the MERN stack (MongoDB, Express.js, React.js, Node.js) with Socket.io for real-time communication. It features a stylish and interactive interface where users can chat with each other online in real-time.
 
 ## Technologies Used 💻
 * MongoDB: A NoSQL database used to store chat messages and user data.
@@ -20,7 +20,9 @@ Let's Chat is a real-time chat application website built using the MERN stack (M
 ## Screenshots 📷
 
 <!-- Include screenshots of your application here -->
-![Let's Chat Screenshot](./screenshots/chat_screenshot.png)
+![Login](./Images/login.jpg)
+![Avatar](./Images/avatar.jpg)
+![Chats](./Images/chat.jpg)
 
 ## Getting Started 🚀
 
@@ -28,7 +30,7 @@ Follow these steps to get the Let's Chat project up and running on your local ma
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Shubhithebeast/LetsChat.git
+   git clone https://github.com/Shubhithebeast/Talkies.git
 
 2. Navigate to the server directory and install dependencies:
    ```bash
