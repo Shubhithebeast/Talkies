@@ -8,8 +8,9 @@ import {Buffer} from 'buffer';
 import { setAvatarRoute } from '../utils/APIRoutes';
 
 const SetAvatar = () => {
-
-    const api = `https://api.multiavatar.com/4645646`;
+    
+    console.log("base url: ", process.env.REACT_APP_BASE_URL);
+    const api = `${process.env.REACT_APP_BASE_URL}/api/avatar`;
     const navigate = useNavigate();
 
     const [avatars,setAvatars] = useState([]);
@@ -33,13 +34,11 @@ const SetAvatar = () => {
             const {data} = await axios.post(`${setAvatarRoute}/${user._id}`,{
                 image:avatars[selectedAvatar]
             })
-
             // console.log(data);
 
             if(data.isSet){
                 user.isAvatarImageSet=true;
                 user.avatarImage = data.image;
-                localStorage.setItem("chat-app-user",JSON.stringify(user));
                 navigate("/");
             }else{
                 toast.error("Something went wrong! Try Again...",toastOptions)
@@ -54,27 +53,28 @@ const SetAvatar = () => {
             navigate("/login");
         }
 
-        async function fetchData(){
-            try{
-                    const data = [];
-                    for (let i = 0; i < 5; i++) {
-                    const image = await axios.get(
-                        `${api}/${Math.round(Math.random() * 1000)}`
-                    );
-                    const buffer = new Buffer(image.data);
-                    data.push(buffer.toString("base64"));
-        
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    }
-                    setAvatars(data);
-                    setIsLoading(false);
-            }catch(error){
-                console.log("Error in fetching Avatars",error);
+
+        async function fetchData() {
+            try {
+                const data = [];
+                const used = new Set();
+                while (data.length < 5) {
+                    // Generate a unique random number in a large range
+                    const randomNumber = Math.floor(Math.random() * 1000000);
+                    if (used.has(randomNumber)) continue;
+                    used.add(randomNumber);
+                    const { data: res } = await axios.get(`${api}/${randomNumber}`);
+                    data.push(res.image);
+                }
+                setAvatars(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.log("Error in fetching Avatars", error);
             }
         }
 
-        fetchData();        
-      },[]);
+        fetchData();
+    }, []);
 
     return (
         <>
@@ -97,7 +97,7 @@ const SetAvatar = () => {
                                 className={`avatar ${selectedAvatar===ind ? "selected" :"" }`}
                             >
                                 <img 
-                                    src={`data:image/svg+xml;base64,${avatar}`}
+                                    src={avatar}
                                     alt="avatar"
                                     key={avatar}
                                     onClick={()=> setSelectedAvatar(ind)}

@@ -1,39 +1,34 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 
-module.exports.register = async(req,res,next)=>{
-    // console.log(req.body);
 
-    try{
-        const {username,email,password} = req.body;
+module.exports.register = async (req, res, next) => {
+    try {
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) {
+            return res.status(400).json({ status: false, msg: "All fields are required" });
+        }
+        const usernameCheck = await User.findOne({ username });
+        if (usernameCheck)
+            return res.status(409).json({ msg: "Username already used", status: false });
 
-    const usernameCheck = await User.findOne({username});
-    if(usernameCheck)
-        return res.json({msg:"Username already used",status:false});
-    
-    const emailCheck = await User.findOne({email});
-    if(emailCheck)
-        return res.json({msg:"Email already used",status:false});
+        const emailCheck = await User.findOne({ email });
+        if (emailCheck)
+            return res.status(409).json({ msg: "Email already used", status: false });
 
-    const hashPassword = await bcrypt.hash(password,10);
-    // Issue no.2 IssueFaced.md
-    const user = await User.create({ 
-        email,username,password:hashPassword,
-    });
-    // console.log("userController register:");
-    // console.log(user);
-    // console.log("username,email,pass: ",username," ",email," ",password);
-    // console.log(user);
-
-    delete user.password;
-    // console.log("user,email,pass: ",username," ",email," ",password);
-    
-    return res.json({status:true,user});
-    }catch(error){
-    // console.log("username,email,pass: error",username," ",email," ",password);
+        const hashPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            email,
+            username,
+            password: hashPassword,
+        });
+        // Convert to plain object and remove password
+        const userObj = user.toObject();
+        delete userObj.password;
+        return res.status(201).json({ status: true, user: userObj });
+    } catch (error) {
         next(error);
     }
-
 };
 
 module.exports.login = async(req,res,next)=>{
@@ -58,34 +53,33 @@ module.exports.login = async(req,res,next)=>{
     }
 }
  
-module.exports.setAvatar = async(req,res,next)=>{
-    try{
+
+module.exports.setAvatar = async (req, res, next) => {
+    try {
         const userId = req.params.id;
         const avatarImage = req.body.image;
-
-         // Check if userId is valid
-         if (!userId) {
-            return res.json({ error: 'User ID is required',status:false });
+        if (!userId || !avatarImage) {
+            return res.status(400).json({ status: false, error: 'User ID and image are required' });
         }
-
         const userData = await User.findByIdAndUpdate(
             userId,
             {
-            isAvatarImageSet:true, 
-            avatarImage,
+                isAvatarImageSet: true,
+                avatarImage,
             },
-            {new : true}
-        ) 
-
+            { new: true }
+        );
+        if (!userData) {
+            return res.status(404).json({ status: false, error: 'User not found' });
+        }
         return res.json({
-            isSet:userData.isAvatarImageSet,
-            image:userData.avatarImage,
+            isSet: userData.isAvatarImageSet,
+            image: userData.avatarImage,
         });
-
-    }catch(error){
+    } catch (error) {
         next(error);
-    } 
-}
+    }
+};
 
 
 module.exports.getAllUsers = async (req, res, next) => {
