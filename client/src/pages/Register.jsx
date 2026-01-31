@@ -31,31 +31,38 @@ const Register = () => {
     }
   },[])
 
-  const handleSubmit = async(e)=>{
-    
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(handleValidation()){
-      // console.log("In handle validation...",registerRoute);
+    if (handleValidation()) {
       const { email, username, password } = values;
-      const {data} = await axios.post(registerRoute,{
-        username,email,password
-      }); 
-
-      //react-toastify is a node.js library, helps to display notifications or toasts in a clean and customizable way
-      // we can  customize the appearance and behavior of the toasts by passing options as parameters like i did toastOptions
-
-      if(data.status===false){
-        toast.error(data.msg,toastOptions);
+      try {
+        const { data } = await axios.post(registerRoute, {
+          username, email, password
+        });
+        if (data.status === false) {
+          toast.error(data.msg, toastOptions);
+        }
+        if (data.status === true) {
+          localStorage.setItem("chat-app-user", JSON.stringify(data.user));
+          navigate("/chat");
+        }
+      } catch (error) {
+        // Handle Axios errors and show user-friendly messages
+        if (error.response) {
+          if (error.response.status === 409) {
+            toast.error(error.response.data.msg || "Username or email already exists.", toastOptions);
+          } else if (error.response.status === 400) {
+            toast.error(error.response.data.msg || "Invalid registration details.", toastOptions);
+          } else {
+            toast.error(error.response.data.msg || "Registration failed. Please try again.", toastOptions);
+          }
+        } else if (error.request) {
+          toast.error("No response from server. Please check your connection.", toastOptions);
+        } else {
+          toast.error("An unexpected error occurred.", toastOptions);
+        }
       }
-      // whenever our data is ok, will store in localStorage (its a storage in our server);
-      if(data.status===true){
-        // console.log("Register:  ")
-        // console.log( JSON.stringify(data.user));
-        // console.log("........")
-        localStorage.setItem("chat-app-user",JSON.stringify(data.user));
-        navigate("/");
-      }
-    };
+    }
   }
 
   // handling form input validation and showing toast if there is error

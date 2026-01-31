@@ -1,13 +1,16 @@
 import React,{useState,useEffect,useRef} from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import styled from "styled-components";
 import Logout from './Logout';
 import ChatInput from './ChatInput';
 import axios from  'axios';
 import { getAllMessagesRoute, sendMessageRoute } from '../utils/APIRoutes';
 import {v4 as uuidv4 } from "uuid";
+import { useTheme } from '../context/ThemeContext';
 
 const ChatContainer = ({currentChat, currentUser, socket}) => {
-
+    const { theme } = useTheme();
     const [messages, setMessages] = useState([]);
     const [arrivalMessage,setArrivalMessage] =useState(null);
     const scrollRef = useRef();
@@ -34,11 +37,16 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
             message:msg
         })  
         
-        socket.current.emit("send-msg",{
-            to:currentChat._id,
-            from: currentUser._id,
-            message:msg,
-        });
+        if(socket.current && socket.current.connected){
+            console.log("Emitting send-msg:", {to: currentChat._id, from: currentUser._id, message: msg});
+            socket.current.emit("send-msg",{
+                to:currentChat._id,
+                from: currentUser._id,
+                message:msg,
+            });
+        } else {
+            console.error("Socket not connected!");
+        }
 
         const msgs = [...messages];
         msgs.push({fromSelf:true, message:msg});
@@ -48,16 +56,15 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
 
     }
 
-    useEffect(()=>{
-        if(socket.current){
-            console.log("socket current...");
 
-            socket.current.on("msg-receive",(msg)=>{
-                console.log({msg});
-                setArrivalMessage({fromSelf:false,message:msg});
-            })
+    useEffect(() => {
+        if (socket.current) {
+            socket.current.on("msg-receive", (msg) => {
+                console.log("msg-receive event:", msg);
+                setArrivalMessage({ fromSelf: false, message: msg });
+            });
         }
-    },[])
+    }, []);
 
 
     useEffect(()=>{
@@ -69,57 +76,53 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
         scrollRef.current?.scrollIntoView({ behavior:"smooth"});
     },[messages]);
 
-  return (
-    <>
-    {currentChat &&  (
-
-     <Container>
-        <div className="chat-header">
-            <div className='user-details'>
-                <div className='avatar'>
-                    <img 
-                        src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-                        alt="avatar"
-                    />
-                </div>
-                <div className='username'>
-                    <h3>{currentChat.username}</h3>
-                </div>
-            </div>
-            <Logout />
-        </div>
-
-        {/* <Messages /> */}
-        <div className="chat-messages">
-            {messages.map((message)=>{
-                return(
-                    <div ref={scrollRef} key={uuidv4()}>
-                        <div className={`message ${message.fromSelf ? "sended" : "received" }`} >
-                            <div className='content'>
-                                <p>{message.message}</p>
+    return (
+        <>
+            {currentChat && (
+                <Container theme={theme}>
+                    <div className="chat-header">
+                        <div className='user-details'>
+                            <div className='avatar'>
+                                <img
+                                    src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
+                                    alt="avatar"
+                                />
+                            </div>
+                            <div className='username'>
+                                <h3>{currentChat.username}</h3>
                             </div>
                         </div>
+                        <Logout />
                     </div>
-                )
-            })}
-        </div>
-        <ChatInput handleSendMsg={handleSendMsg} />
-         
 
-    </Container>
-    )}
-    </>
-
-  )
+                    <div className="chat-messages">
+                        {messages.map((message) => {
+                            return (
+                                <div ref={scrollRef} key={uuidv4()}>
+                                    <div className={`message ${message.fromSelf ? "sended" : "received"}`} >
+                                        <div className='content'>
+                                            <p>{message.message}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                    <ChatInput handleSendMsg={handleSendMsg} />
+                </Container>
+            )}
+            <ToastContainer />
+        </>
+    )
 }
 
 const Container = styled.div`
-
     padding-top:1rem;
     display:grid;
     grid-template-rows:10% 78% 12%;
     gap: 0.1rem;
     overflow:hidden;
+    background-color: ${props => props.theme.chatBg};
 
     @media screen and (min-width: 720px) and (max-width:1080px){
         grid-auto-rows: 15% 70% 15%;
@@ -130,6 +133,8 @@ const Container = styled.div`
         justify-content:space-between;
         align-items:center;
         padding:0 2rem;
+        background-color: ${props => props.theme.containerBg};
+        border-bottom: 1px solid ${props => props.theme.border};
 
         .user-details{
             display:flex;
@@ -138,11 +143,13 @@ const Container = styled.div`
             .avatar{
                 img{
                     height:3rem;
+                    border-radius:50%;
                 }
             }
             .username{
                 h3{
-                    color:white;
+                    color: ${props => props.theme.text};
+                    font-weight: 600;
                 }
             }
         }
@@ -154,11 +161,13 @@ const Container = styled.div`
         flex-direction: column;
         gap: 1rem;
         overflow: auto;
+        background-color: ${props => props.theme.chatBg};
+        
         &::-webkit-scrollbar {
-            width:0.2rem;
+            width:0.4rem;
             &-thumb{
-                background-color:#ffffff39;
-                width:0.1rem;
+                background-color: ${props => props.theme.primary};
+                width:0.2rem;
                 border-radius:1rem;
             }
         }
@@ -167,29 +176,32 @@ const Container = styled.div`
             display:flex;
             align-items:center;
             .content{
-                max-width:40%;
+                max-width:60%;
                 overflow-wrap:break-word;
-                padding:1rem;
-                font-size:1.1rem;
+                padding:0.8rem 1.2rem;
+                font-size:1rem;
                 border-radius:1rem;
-                color:#d1d1d1;
+                line-height:1.5;
+                box-shadow: 0 2px 4px ${props => props.theme.shadow};
             }
         }
         .sended{
             justify-content:flex-end;
             .content{
-                background-color:#4f04ff21;
+                background-color: ${props => props.theme.messageSent};
+                color: ${props => props.theme.messageSentText};
+                border-bottom-right-radius: 0.25rem;
             }
         }
         .received{
             justify-content:flex-start;
             .content{
-                background-color: #9900ff20;
+                background-color: ${props => props.theme.messageReceived};
+                color: ${props => props.theme.messageReceivedText};
+                border-bottom-left-radius: 0.25rem;
             }
         }
-        .
     }
-
 `
 
 export default ChatContainer

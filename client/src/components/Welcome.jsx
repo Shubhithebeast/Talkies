@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import Robot from "../assets/robot.gif";
+import { useTheme } from '../context/ThemeContext';
 
 const Welcome = ({ currentUser }) => {
+    const { theme } = useTheme();
     // console.log("CurrentUser: ",currentUser);
 
      // Check if currentUser is defined before accessing its properties
@@ -10,7 +12,7 @@ const Welcome = ({ currentUser }) => {
     //     return null; // or return a loading indicator
     // }
   return (
-    <Container>
+    <Container theme={theme}>
         <img src={Robot} alt="Robot"  />
         <h1>
             Welcome, <span>{currentUser.username}👋</span>
@@ -25,18 +27,24 @@ const Container = styled.div`
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    color:white;
+    background-color: ${props => props.theme.chatBg};
+    color: ${props => props.theme.text};
+    
     img{
         height:17rem;
     }
     span{
-        color:#4e00ff;
+        color: ${props => props.theme.primary};
+        font-weight: 600;
+    }
+    h1 {
+        margin: 1rem 0;
+        font-size: 2rem;
     }
     h3{
         line-height:2rem;
+        color: ${props => props.theme.textSecondary};
     }
-
-
 `
 
 export default Welcome

@@ -37,9 +37,10 @@ const SetAvatar = () => {
             // console.log(data);
 
             if(data.isSet){
-                user.isAvatarImageSet=true;
+                user.isAvatarImageSet = true;
                 user.avatarImage = data.image;
-                navigate("/");
+                localStorage.setItem("chat-app-user", JSON.stringify(user));
+                navigate("/chat");
             }else{
                 toast.error("Something went wrong! Try Again...",toastOptions)
             }

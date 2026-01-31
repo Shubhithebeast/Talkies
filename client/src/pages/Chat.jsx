@@ -7,9 +7,11 @@ import Contacts from '../components/Contacts';
 import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
 import {io}  from "socket.io-client";
+import { useTheme } from '../context/ThemeContext';
 
 const Chat = () => {
   const socket = useRef();
+  const { theme } = useTheme();
 
   const navigate = useNavigate();
   const [contacts,setContacts] = useState([]);
@@ -28,50 +30,53 @@ const Chat = () => {
     
   // },[])
 
-  useEffect(()=>{
-    async function setUser(){
 
-      if(!localStorage.getItem("chat-app-user")){
+  useEffect(() => {
+    async function setUser() {
+      const userData = localStorage.getItem("chat-app-user");
+      if (!userData) {
         navigate("/login");
-      }else{
-        setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
+      } else {
+        const user = JSON.parse(userData);
+        if (!user.isAvatarImageSet) {
+          navigate("/setavatar");
+          return;
+        }
+        setCurrentUser(user);
         setIsLoaded(true);
       }
-    }  
+    }
     setUser();
-  },[])
+  }, []);
 
   useEffect(()=>{
     if(currentUser){
       socket.current = io(host);
-      socket.current.emit( "add user", currentUser._id );
+      socket.current.emit("add-user", currentUser._id);
     }
   },[currentUser])
 
   
-  useEffect( () => {
-    // console.log("CurrentUser: ",currentUser)
+
+  useEffect(() => {
+    let intervalId;
     const fetchData = async () => {
       try {
-        if (currentUser) {
-          // console.log("currentUser0:", currentUser);
-          if (currentUser.isAvatarImageSet) {
-            // console.log("Inside getallusers.")
-            const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-            // console.log("fetch Data of contacts:", data.data);
-            setContacts(data.data);
-          } else {
-            navigate("/setavatar");
-          }
-          // console.log("contacts:", contacts); 
-
+        if (currentUser && currentUser.isAvatarImageSet) {
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          setContacts(data.data);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Handle the error as needed
       }
     };
-    fetchData();
+    if (currentUser) {
+      fetchData();
+      intervalId = setInterval(fetchData, 5000); // Poll every 5 seconds
+    }
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
   }, [currentUser]);
 
   const handleChatChange = (chat) =>{
@@ -80,7 +85,7 @@ const Chat = () => {
 
 
   return (
-    <Container>
+    <Container theme={theme}>
       <div className="container">
       {/* {console.log("CurrentUser1 is: ",currentUser)} */}
         <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange} />
@@ -105,17 +110,21 @@ const Container = styled.div`
   width:100vw;
   display:flex;
   flex-direction:column;
-
   justify-content:center;
   align-items:center;
   gap:1rem;
-  background-color:#131324;
+  background-color: ${props => props.theme.background};
+  
     .container{
       height:85vh;
       width:85vw;
-      background-color:#00000076;
+      background-color: ${props => props.theme.containerBg};
       display:grid;
       grid-template-columns: 25% 75%;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 8px 32px ${props => props.theme.shadow};
+      
       @media screen and (min-width: 720px) and  (max-width: 1080px){
         grid-template-columns: 35% 65%;
       }

@@ -71,6 +71,7 @@ global.onlineUsers = new Map();
 // to the server, the provided callback function is executed
 //  with the socket object representing the connection.
 io.on("connection",(socket)=>{
+    console.log("New socket connection:", socket.id);
     global.chatSocket = socket;
 
     // listens  "add-user" event from the client. 
@@ -79,23 +80,18 @@ io.on("connection",(socket)=>{
         // adding entry in  onlineUsers map,
         // associating the userId with the socket.id.
         onlineUsers.set(userId, socket.id);
+        console.log("User added:", userId, "with socket ID:", socket.id);
+        console.log("Current online users:", Array.from(onlineUsers.entries()));
     })
 
-    socket.on("send-msg", (data)=>{
-        // console.log("send-msg",{data});
-
-        // console.log("onlineUsers keys:", Array.from(onlineUsers.keys()));
-
-        // retrieves the socket ID of the recipient user (data.to)  from amp
-        const sendUserSocket =  onlineUsers.get(data.to);
-        // console.log("sendUserSocket",sendUserSocket);
-
-
-        // f the recipient's socket ID is found in the onlineUsers map. 
-        // If the recipient is online further code execute
-        if(sendUserSocket){
-            // console.log("inside sendUserSocket");
-            socket.to(sendUserSocket).emit("msg-receive",data.msg);
+    socket.on("send-msg", (data) => {
+        console.log("Message from", data.from, "to", data.to, ":", data.message);
+        const sendUserSocket = onlineUsers.get(data.to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("msg-receive", data.message);
+            console.log("✓ Sent to socket:", sendUserSocket);
+        } else {
+            console.log("✗ User not found:", data.to);
         }
-    }) 
+    });
 })
