@@ -88,7 +88,10 @@ io.on("connection",(socket)=>{
         console.log("Message from", data.from, "to", data.to, ":", data.message);
         const sendUserSocket = onlineUsers.get(data.to);
         if (sendUserSocket) {
-            socket.to(sendUserSocket).emit("msg-receive", data.message);
+            socket.to(sendUserSocket).emit("msg-receive", {
+                from: data.from,
+                message: data.message
+            });
             console.log("✓ Sent to socket:", sendUserSocket);
         } else {
             console.log("✗ User not found:", data.to);

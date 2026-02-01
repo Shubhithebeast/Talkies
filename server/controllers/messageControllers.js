@@ -44,3 +44,17 @@ module.exports.getAllMessage = async(req,res,next)=>{
     }
     
 }
+
+module.exports.clearChat = async (req, res, next) => {
+    try {
+        const { from, to } = req.body;
+        await messageModal.deleteMany({
+            users: {
+                $all: [from, to],
+            },
+        });
+        res.json({ status: true, msg: "Chat cleared successfully" });
+    } catch (error) {
+        next(error);
+    }
+};

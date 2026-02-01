@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Chat from './pages/Chat';
 import Login from './pages/Login';
 import SetAvatar from './pages/SetAvatar';
+import Profile from './pages/Profile';
 import InitialRedirect from './components/InitialRedirect';
 import "react-toastify/dist/ReactToastify.css";
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/login" element={<Login/>}  />
           <Route path="/setavatar" element={<SetAvatar />}  />
           <Route path="/chat" element={<Chat/>}  />
+          <Route path="/profile" element={<Profile />}  />
           <Route path="/" element={<InitialRedirect />} />
         </Routes>
       </BrowserRouter>

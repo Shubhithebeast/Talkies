@@ -3,3 +3,6 @@ node_modules/
 
 # Ignore env file
 .env
+
+# Ignore cleanup scripts
+cleanup-users.js

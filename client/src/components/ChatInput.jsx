@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect, useRef} from 'react'
 import styled from "styled-components";
 import { IoMdSend} from "react-icons/io";
 import { BsEmojiSmileFill} from "react-icons/bs";
@@ -7,6 +7,7 @@ import Picker from "emoji-picker-react";
 const ChatInput = ({handleSendMsg}) => {
     const [showEmojiPicker,setShowEmojiPicker] = useState(false);
     const [msg,setMsg] = useState("");
+    const emojiPickerRef = useRef(null);
 
     const handleEmojiPickerToggle =()=>{
         setShowEmojiPicker(!showEmojiPicker);
@@ -31,14 +32,27 @@ const ChatInput = ({handleSendMsg}) => {
         }
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
   return (
     <Container>
         <div className='button-container'>
-            <div className='emoji'>
+            <div className='emoji' ref={emojiPickerRef}>
                 <BsEmojiSmileFill  onClick={handleEmojiPickerToggle} />
 
                 {
-                    showEmojiPicker && <Picker width="300px" height="400px" onEmojiClick={handleEmojiClick}/>
+                    showEmojiPicker && <Picker width="280px" height="320px" onEmojiClick={handleEmojiClick}/>
                 }
             </div>
         </div>
@@ -84,9 +98,25 @@ const Container =styled.div`
             
             .EmojiPickerReact{
                 position:absolute;
-                top: -26rem; 
+                bottom: 3rem; 
                 box-shadow: 0 5px 10px #9a86f3;
-            
+                
+                .epr-emoji-category-label {
+                    font-size: 0.85rem;
+                }
+                
+                button.epr-emoji {
+                    width: 28px !important;
+                    height: 28px !important;
+                    
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                    
+                    span {
+                        font-size: 1.2rem !important;
+                    }
+                }
             }
         }
     }
@@ -103,8 +133,8 @@ const Container =styled.div`
             background-color:transparent;
             color:white;
             border:none;
-            padding-left:1rem;
-            font-size:1.2rem;
+            padding:0.8rem 1rem;
+            font-size:1.3rem;
             &::selection{
                 background-color:#9a86f3;
             }
@@ -130,11 +160,11 @@ const Container =styled.div`
             }
 
             svg{
-                font-size:2rem;
+                font-size:1rem;
                 color:white;
                  transition:transform 0.5s ease;
             &:hover{
-                transform: scale(1.2);
+                transform: scale(0.3);
             }
             }
 

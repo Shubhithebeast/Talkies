@@ -96,3 +96,28 @@ module.exports.getAllUsers = async (req, res, next) => {
       next(ex);
     }
   };
+
+module.exports.updateProfile = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const { username, avatarImage } = req.body;
+        
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (avatarImage) updateData.avatarImage = avatarImage;
+        
+        const userData = await User.findByIdAndUpdate(userId, updateData, { new: true });
+        
+        if (!userData) {
+            return res.status(404).json({ status: false, msg: "User not found" });
+        }
+        
+        delete userData.password;
+        return res.json({
+            status: true,
+            user: userData,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
