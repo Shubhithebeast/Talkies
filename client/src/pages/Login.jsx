@@ -1,5 +1,4 @@
 import React, { useState,useEffect } from 'react'
-import Logo from "../assets/logo.svg"
 import styled from 'styled-components'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast,ToastContainer } from 'react-toastify'
@@ -77,7 +76,7 @@ const Login = () => {
       <FormContainer theme={theme}>
         <form onSubmit={(event) => handleSubmit(event)}>
           <div className='brand'>
-            <img src={Logo} alt="Logo" />
+            <img src="/android-chrome-192x192.png" alt="Logo" />
             <h1>Talkies</h1>
           </div>
           <hr></hr>
@@ -111,7 +110,7 @@ const FormContainer = styled.div`
   gap:1rem;
   justify-content:center;
   img{
-    height:5rem;
+    height:3rem;
   }
   h1{
     color:${props => props.theme.text};

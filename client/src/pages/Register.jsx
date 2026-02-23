@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import { Link ,useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
-import Logo from "../assets/logo.svg"
 import {ToastContainer,toast} from "react-toastify";
 import axios from "axios";
 import { registerRoute } from '../utils/APIRoutes';
@@ -98,7 +97,7 @@ const Register = () => {
       <FormContainer theme={theme}>
         <form onSubmit={(e)=>handleSubmit(e)}>
           <div className='brand'>
-            <img src={Logo} alt="Logo" />
+            <img src="/android-chrome-192x192.png" alt="Logo" />
             <h1>Talkies</h1>
           </div>
           <hr/>
@@ -136,7 +135,7 @@ const FormContainer = styled.div`
     gap:1rem;
     justify-content:center;
     img{
-      height:5rem;
+      height:3rem;
     }
     h1{
       color:${props => props.theme.text};
