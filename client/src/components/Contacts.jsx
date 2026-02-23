@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import Logo from "../assets/logo.svg";
 import ThemeToggle from './ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
 import Logout from './Logout';
@@ -47,7 +46,7 @@ const Contacts = ({contacts,currentUser, changeChat, onlineUsers = []}) => {
             <Container theme={theme}>
                 <div className='brand'>
                     <div className='logo-title'>
-                        <img src={Logo} alt="Logo" />
+                        <img src="/favicon-32x32.png" alt="Logo" />
                         <h3>Talkies</h3>
                     </div>
                     <ThemeToggle />
