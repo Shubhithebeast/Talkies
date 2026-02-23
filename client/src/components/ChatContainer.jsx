@@ -101,9 +101,8 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
     };
 
     return (
-        <>
-            {currentChat && (
-                <Container theme={theme}>
+        currentChat && (
+            <Container theme={theme}>
                     <div className="chat-header">
                         <div className='user-details'>
                             <div className='avatar'>
@@ -146,30 +145,24 @@ const ChatContainer = ({currentChat, currentUser, socket}) => {
                         })}
                     </div>
                     <ChatInput handleSendMsg={handleSendMsg} />
+                    <ToastContainer />
                 </Container>
-            )}
-            <ToastContainer />
-        </>
+            )
     )
 }
 
 const Container = styled.div`
-    padding-top:1rem;
+    height: 100%;
     display:grid;
-    grid-template-rows:10% 78% 12%;
-    gap: 0.1rem;
+    grid-template-rows: auto minmax(0, 1fr) auto;
     overflow:hidden;
     background-color: ${props => props.theme.chatBg};
-
-    @media screen and (min-width: 720px) and (max-width:1080px){
-        grid-auto-rows: 15% 70% 15%;
-    }
 
     .chat-header{
         display:flex;
         justify-content:space-between;
         align-items:center;
-        padding:0 2rem;
+        padding:0.85rem 1.4rem;
         background-color: ${props => props.theme.containerBg};
         border-bottom: 1px solid ${props => props.theme.border};
 
@@ -187,6 +180,7 @@ const Container = styled.div`
                 h3{
                     color: ${props => props.theme.text};
                     font-weight: 600;
+                    letter-spacing: 0.01em;
                 }
             }
         }
@@ -198,7 +192,7 @@ const Container = styled.div`
             
             .clear-chat-btn {
                 background: transparent;
-                border: none;
+                border: 1px solid ${props => props.theme.border};
                 color: ${props => props.theme.textSecondary};
                 cursor: pointer;
                 padding: 0.5rem;
@@ -221,7 +215,8 @@ const Container = styled.div`
     }
 
     .chat-messages{
-        padding: 1rem 2rem;
+        min-height: 0;
+        padding: 1rem 1.4rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
@@ -248,6 +243,7 @@ const Container = styled.div`
                 border-radius:1rem;
                 line-height:1.5;
                 box-shadow: 0 2px 4px ${props => props.theme.shadow};
+                border: 1px solid ${props => props.theme.border};
             }
         }
         .sended{

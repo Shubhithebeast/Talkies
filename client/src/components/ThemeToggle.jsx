@@ -39,7 +39,7 @@ const ToggleButton = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: white;
+  color: ${props => props.theme.messageSentText};
   box-shadow: 0 2px 8px ${props => props.theme.shadow};
   
   &:hover {

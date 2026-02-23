@@ -23,21 +23,19 @@ const Button = styled.button`
     align-items:center;
     padding:0.5rem;
     border-radius:0.5rem;
-    background-color:red;
+    background-color:#dc2626;
     cursor:pointer;
-    border:none;
-    transition: 0.5s transform ease-in-out;
+    border:1px solid #ef4444;
+    transition: 0.2s transform ease, background-color 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
     svg{
         font-size:1.3rem;
         color:white;
     }
     &:hover{
-        ${'' /* box-shadow: 2px 2px 12px 2px white; */}
-        transform:scale(1.1);
+        transform:translateY(-1px);
+        background-color:#b91c1c;
     }
-    ${'' /* &:focus{
-        transform:scale(1);
-    } */}
 `
 
 export default Logout

@@ -5,8 +5,10 @@ import Logo from "../assets/logo.svg"
 import {ToastContainer,toast} from "react-toastify";
 import axios from "axios";
 import { registerRoute } from '../utils/APIRoutes';
+import { useTheme } from '../context/ThemeContext';
 
 const Register = () => {
+  const { theme } = useTheme();
   const navigate = useNavigate();
   const [values,setValues] = useState({
     username:"",email:"",password:"",confirmPassword:""
@@ -18,7 +20,7 @@ const Register = () => {
       autoClose:8000,
       pauseOnHover:true,
       draggable:true,
-      theme: "dark",
+      theme: theme.name === "dark" ? "dark" : "light",
     
   }
   
@@ -93,7 +95,7 @@ const Register = () => {
 
   return (
     <> 
-      <FormContainer>
+      <FormContainer theme={theme}>
         <form onSubmit={(e)=>handleSubmit(e)}>
           <div className='brand'>
             <img src={Logo} alt="Logo" />
@@ -126,7 +128,7 @@ const FormContainer = styled.div`
   justify-content:center;
   gap:1rem;
   align-items:center;
-  background-color:#131324;
+  background: linear-gradient(160deg, ${props => props.theme.background}, ${props => props.theme.chatBg});
 
   .brand{
     display:flex;
@@ -137,7 +139,7 @@ const FormContainer = styled.div`
       height:5rem;
     }
     h1{
-      color:white;
+      color:${props => props.theme.text};
     }
   }
 
@@ -145,7 +147,9 @@ const FormContainer = styled.div`
     display:flex;
     flex-direction:column;
     gap:2rem;
-    background-color:#00000076;
+    background-color:${props => props.theme.containerBg};
+    border:1px solid ${props => props.theme.border};
+    box-shadow: 0 12px 28px ${props => props.theme.shadow};
     border-radius:2rem;
     padding:3rem 5rem;
 
@@ -154,19 +158,22 @@ const FormContainer = styled.div`
   input{
     background-color:transparent;
     padding:1rem;
-    border:0.1rem inset #4e0eff;
+    border:0.1rem solid ${props => props.theme.border};
     border-radius:0.4rem;
-    color:white;
+    color:${props => props.theme.text};
     width:100%;
     font-size:1.2rem;
+    &::placeholder{
+      color:${props => props.theme.textSecondary};
+    }
     &:focus{
-      border: 0.18rem outset #4e0eff;
+      border: 0.12rem solid ${props => props.theme.primary};
       outline:none;
     }
   }
 
   button{
-    background-color:#4e0eff;
+    background-color:${props => props.theme.primary};
     color: white;
     padding: 1rem 2rem;
     border:none;
@@ -176,17 +183,17 @@ const FormContainer = styled.div`
     font-size:1rem;
     transition: 0.5s transform ease-in-out;
     &:hover{
-        ${'' /* background-color:#541bf0d2; */}
+        background-color:${props => props.theme.primaryLight};
         transform:scale(1.05);
     }
 
   }
 
   span{
-    color:white;
+    color:${props => props.theme.text};
     text-transform:uppercase;
     a{
-      color:#4e0eff;
+      color:${props => props.theme.primary};
       text-decoration:none;
       font-weight:bold;
     }

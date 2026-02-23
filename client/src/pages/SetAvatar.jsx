@@ -4,10 +4,11 @@ import { toast,ToastContainer } from 'react-toastify';
 import loader from '../assets/loader.gif'
 import styled from 'styled-components';
 import axios from 'axios';
-import {Buffer} from 'buffer';
 import { setAvatarRoute } from '../utils/APIRoutes';
+import { useTheme } from '../context/ThemeContext';
 
 const SetAvatar = () => {
+    const { theme } = useTheme();
     
     console.log("base url: ", process.env.REACT_APP_BASE_URL);
     const api = `${process.env.REACT_APP_BASE_URL}/api/avatar`;
@@ -22,7 +23,7 @@ const SetAvatar = () => {
         autoClose:8000,
         pauseOnHover:true,
         draggable:true,
-        theme:"dark",
+        theme: theme.name === "dark" ? "dark" : "light",
     }
 
     const setProfilePicture =  async () =>{
@@ -81,39 +82,38 @@ const SetAvatar = () => {
         <>
         {
             isLoading ? (
-                <Container>
+                <Container theme={theme}>
                     <img src={loader} alt="loader" className='loader'/>
                 </Container>
             ):(
-                <Container>
-                <div className="title-container">
-                    <h1>Pick an avatar for your profile picture</h1>
-                </div>
+                <Container theme={theme}>
+                    <div className="title-container">
+                        <h1>Pick an avatar for your profile picture</h1>
+                    </div>
 
-                <div className='avatars'>
-                 {
-                    avatars.map((avatar,ind) =>{
-                        return(
-                            <div key={ind} 
-                                className={`avatar ${selectedAvatar===ind ? "selected" :"" }`}
-                            >
-                                <img 
-                                    src={avatar}
-                                    alt="avatar"
-                                    key={avatar}
-                                    onClick={()=> setSelectedAvatar(ind)}
-                                />
-                                
-                            </div>
-                        )
-                    })
-                 }                
-                </div>
-                <button className="submit-btn" onClick={setProfilePicture}>
+                    <div className='avatars'>
+                     {
+                        avatars.map((avatar,ind) =>{
+                            return(
+                                <div key={ind} 
+                                    className={`avatar ${selectedAvatar===ind ? "selected" :"" }`}
+                                >
+                                    <img 
+                                        src={avatar}
+                                        alt="avatar"
+                                        key={avatar}
+                                        onClick={()=> setSelectedAvatar(ind)}
+                                    />
+                                    
+                                </div>
+                            )
+                        })
+                     }                
+                    </div>
+                    <button className="submit-btn" onClick={setProfilePicture}>
                         Set as Profile Picture
-                </button>
-
-            </Container>
+                    </button>
+                </Container>
         )}
             <ToastContainer/>
         </>
@@ -126,13 +126,13 @@ const Container = styled.div`
     align-items:center;
     flex-direction:column;
     gap:4rem;
-    background-color:#131324;
+    background: linear-gradient(160deg, ${props => props.theme.background}, ${props => props.theme.chatBg});
     width:100vw;
     height:100vh;
 
     .title-container{
         h1{
-            color:white;
+            color:${props => props.theme.text};
         }
     }
     .loader {
@@ -144,7 +144,7 @@ const Container = styled.div`
         gap:2rem;
 
         .avatar{
-            border:0.4rem dotted transparent;
+            border:0.28rem solid transparent;
             padding:0.4rem;
             border-radius:5rem;
             display:flex;
@@ -157,16 +157,17 @@ const Container = styled.div`
             }
         }
         .selected{
-            border:0.4rem groove #4e0eff;
+            border:0.28rem solid ${props => props.theme.primary};
+            box-shadow: 0 8px 16px ${props => props.theme.shadow};
         }
     }
 
 
     .submit-btn{
-        background-color: #4e0eff;
+        background-color: ${props => props.theme.primary};
         color:white;
         padding:1rem 2rem;
-        border:none;
+        border:1px solid ${props => props.theme.primaryLight};
         font-weight:bolder;
         font-stretch: expanded;
         cursor:pointer;
@@ -175,7 +176,7 @@ const Container = styled.div`
         text-transform:uppercase;
         transition: 0.5s transform ease-in-out;
         &:hover{
-            ${'' /* background-color:#541bf0d2; */}
+            background-color: ${props => props.theme.primaryLight};
             transform:scale(1.05);
         }
 

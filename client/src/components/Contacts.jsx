@@ -51,16 +51,16 @@ const Contacts = ({contacts,currentUser, changeChat}) => {
                     {
                         contacts.map((contact,index)=>{
                             return(
-                                <div key={index}
-                                className={`contact 
-                                    ${index===currentSelected ? "selected" : ""}`}
+                                <div
+                                    key={index}
+                                    className={`contact ${index===currentSelected ? "selected" : ""}`}
                                     onClick={() => changeCurrentChat(index,contact)}
                                 >
                                     <div className='avatar'>
-                                                                                <img 
-                                                                                    src={getAvatarSrc(contact.avatarImage)}
-                                                                                    alt="avatar"
-                                                                                 />
+                                        <img 
+                                            src={getAvatarSrc(contact.avatarImage)}
+                                            alt="avatar"
+                                         />
                                     </div>
                                     <div className='username'>
                                         <h3>{contact.username}</h3>
@@ -123,7 +123,8 @@ const Container = styled.div`
         h3{
             color: ${props => props.theme.text};
             text-transform:uppercase;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.04em;
         }
     }
 
@@ -156,11 +157,11 @@ const Container = styled.div`
             gap:1rem;
             align-items:center;
             transition:0.3s ease-in-out;
-            border: 1px solid transparent;
+            border: 1px solid ${props => props.theme.border};
             
             &:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px ${props => props.theme.shadow};
+                transform: translateY(-1px);
+                box-shadow: 0 6px 14px ${props => props.theme.shadow};
             }
             
             .avatar{
@@ -178,7 +179,7 @@ const Container = styled.div`
 
         }
         .selected{
-            background-color: ${props => props.theme.primary};
+            background: linear-gradient(135deg, ${props => props.theme.primary}, ${props => props.theme.primaryLight});
             border-color: ${props => props.theme.primaryLight};
             
             .username h3 {
@@ -220,7 +221,7 @@ const Container = styled.div`
         
         .settings-btn {
             background: transparent;
-            border: none;
+            border: 1px solid ${props => props.theme.border};
             color: ${props => props.theme.textSecondary};
             cursor: pointer;
             padding: 0.5rem;
@@ -243,11 +244,14 @@ const Container = styled.div`
 
         @media screen and (min-width:720px) and (max-width:1080px){
             gap: 0.5rem;
+
             .username{
                 h2{
-                font-size:1.5rem;
+                    font-size:1rem;
+                }
             }
         }
+    }
 
 `;
 

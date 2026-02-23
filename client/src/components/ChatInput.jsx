@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { IoMdSend} from "react-icons/io";
 import { BsEmojiSmileFill} from "react-icons/bs";
 import Picker from "emoji-picker-react";
+import { useTheme } from '../context/ThemeContext';
 
 const ChatInput = ({handleSendMsg}) => {
+    const { theme } = useTheme();
     const [showEmojiPicker,setShowEmojiPicker] = useState(false);
     const [msg,setMsg] = useState("");
     const emojiPickerRef = useRef(null);
@@ -46,7 +48,7 @@ const ChatInput = ({handleSendMsg}) => {
     }, []);
 
   return (
-    <Container>
+    <Container theme={theme}>
         <div className='button-container'>
             <div className='emoji' ref={emojiPickerRef}>
                 <BsEmojiSmileFill  onClick={handleEmojiPickerToggle} />
@@ -67,39 +69,43 @@ const ChatInput = ({handleSendMsg}) => {
 }
 
 const Container =styled.div` 
-    display:grid;
-    grid-template-columns: 5% 95%;
+    display:flex;
     align-items: center;
-    background-color:#080420;
-    padding:0 2rem;
-    padding-bottom:0.3rem;
+    gap: 0.8rem;
+    background-color:${props => props.theme.inputBarBg};
+    padding:0.7rem 1rem;
+    border-top: 1px solid ${props => props.theme.border};
 
     @media screen and (min-width: 720px) and (max-width:1080px){
-            padding:0rem 1rem;
-            gap:1rem;
-        }
+        padding:0.6rem 0.8rem;
+        gap:0.6rem;
+    }
 
     .button-container{
         display:flex;
         align-items:center;
-        color:white;
-        gap:1rem;
+        justify-content: center;
+        width: 2.5rem;
+        flex-shrink: 0;
+
         .emoji{
             position:relative;
             transition:0.5s transform ease;
+
             svg{
                 font-size:1.5rem;
-                color:yellow;
+                color:#facc15;
                 cursor:pointer;
             }
+
             &:hover{
-                transform: scale(1.2);
+                transform: scale(1.08);
             }
             
             .EmojiPickerReact{
                 position:absolute;
-                bottom: 3rem; 
-                box-shadow: 0 5px 10px #9a86f3;
+                bottom: 3rem;
+                box-shadow: 0 8px 18px ${props => props.theme.shadow};
                 
                 .epr-emoji-category-label {
                     font-size: 0.85rem;
@@ -122,55 +128,69 @@ const Container =styled.div`
     }
     .input-container{
         width:100%;
+        min-width: 0;
         border-radius:2rem;
         display:flex;
         align-items:center;
-        gap:2rem;
-        background-color:#ffffff34;
+        gap:0.5rem;
+        padding: 0.3rem 0.35rem 0.3rem 0.9rem;
+        background-color:${props => props.theme.inputInnerBg};
+        border: 1px solid ${props => props.theme.border};
+
         input{
-            width:90%;
-            ${'' /* height:60%; */}
+            width:100%;
+            min-width: 0;
             background-color:transparent;
-            color:white;
+            color:${props => props.theme.inputText};
             border:none;
-            padding:0.8rem 1rem;
-            font-size:1.3rem;
-            &::selection{
-                background-color:#9a86f3;
+            padding:0.5rem 0.2rem;
+            font-size:1.1rem;
+
+            &::placeholder{
+                color: ${props => props.theme.textSecondary};
+                opacity: 0.9;
             }
+
+            &::selection{
+                background-color:${props => props.theme.primaryLight};
+                color: #fff;
+            }
+
             &:focus{
                 outline:none;
             }
         }
+
         button{
-            padding:0.3rem 1.7rem;
-            border-radius:2rem;
+            width: 2.6rem;
+            height: 2.6rem;
+            flex-shrink: 0;
+            border-radius:50%;
             display:flex;
             justify-content:center;
             align-items:center;
-            background-color:#9a86f3;
+            background-color:${props => props.theme.sendBtnBg};
+            box-shadow: 0 4px 10px ${props => props.theme.shadow};
             border:none;
             cursor:pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
 
             @media screen and (min-width: 720px) and (max-width:1080px){
-                padding:0.3rem 1rem;
-                svg{
-                    font-size:1rem;   
-                 }
+                width: 2.35rem;
+                height: 2.35rem;
             }
 
             svg{
-                font-size:1rem;
+                font-size:1.1rem;
                 color:white;
-                 transition:transform 0.5s ease;
+                margin-left: 0.1rem;
+            }
             &:hover{
-                transform: scale(0.3);
+                background-color: ${props => props.theme.sendBtnHover};
+                transform: translateY(-1px);
             }
-            }
-
         }
     }
-
 `
 
 export default ChatInput

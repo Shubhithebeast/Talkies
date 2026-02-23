@@ -27,7 +27,7 @@ const Container = styled.div`
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    background-color: ${props => props.theme.chatBg};
+    background: linear-gradient(160deg, ${props => props.theme.chatBg}, ${props => props.theme.containerBg});
     color: ${props => props.theme.text};
     
     img{
@@ -44,6 +44,7 @@ const Container = styled.div`
     h3{
         line-height:2rem;
         color: ${props => props.theme.textSecondary};
+        font-weight: 500;
     }
 `
 

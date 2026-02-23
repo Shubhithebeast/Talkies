@@ -112,21 +112,27 @@ const Container = styled.div`
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  gap:1rem;
-  background-color: ${props => props.theme.background};
+  padding: 1.2rem;
+  background: linear-gradient(165deg, ${props => props.theme.background}, ${props => props.theme.chatBg});
   
     .container{
-      height:85vh;
-      width:85vw;
+      height:min(88vh, 900px);
+      width:min(92vw, 1400px);
       background-color: ${props => props.theme.containerBg};
       display:grid;
       grid-template-columns: 25% 75%;
-      border-radius: 1rem;
+      border: 1px solid ${props => props.theme.border};
+      border-radius: 1.1rem;
       overflow: hidden;
-      box-shadow: 0 8px 32px ${props => props.theme.shadow};
+      box-shadow: 0 14px 34px ${props => props.theme.shadow};
       
       @media screen and (min-width: 720px) and  (max-width: 1080px){
         grid-template-columns: 35% 65%;
+      }
+
+      @media screen and (max-width: 719px){
+        width: 96vw;
+        height: 92vh;
       }
     }
 `;
