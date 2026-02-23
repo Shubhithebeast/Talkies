@@ -18,6 +18,7 @@ const Chat = () => {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [currentChat, setCurrentChat] =useState(undefined);
   const [isLoaded,setIsLoaded]=useState(false);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   // Error no.1 IssueFaces.md
   // useEffect(async()=>{
@@ -53,7 +54,14 @@ const Chat = () => {
     if(currentUser){
       socket.current = io(host);
       socket.current.emit("add-user", currentUser._id);
+      socket.current.on("online-users", (users) => {
+        setOnlineUsers(users);
+      });
     }
+
+    return () => {
+      socket.current?.off("online-users");
+    };
   },[currentUser])
 
   
@@ -88,7 +96,7 @@ const Chat = () => {
     <Container theme={theme}>
       <div className="container">
       {/* {console.log("CurrentUser1 is: ",currentUser)} */}
-        <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange} />
+        <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange} onlineUsers={onlineUsers} />
        {/* {console.log("CurrentUser2 is: ",currentUser.username)} */}
 
         {
@@ -96,7 +104,7 @@ const Chat = () => {
             <Welcome currentUser={currentUser}  />
           ):
            (
-            <ChatContainer currentChat={currentChat}  currentUser={currentUser} socket={socket} />
+            <ChatContainer currentChat={currentChat}  currentUser={currentUser} socket={socket} onlineUsers={onlineUsers} />
            )
         }
       </div>

@@ -3,10 +3,22 @@ const messageModal = require("../models/messageModal");
 module.exports.addMessage = async(req,res,next)=>{
     try{
         
-        const {from, to, message} = req.body;
+        const {from, to, message, messageType = "text", attachment = null} = req.body;
+
+        if (messageType === "text" && (!message || !message.trim())) {
+            return res.status(400).json({ msg: "Message text is required." });
+        }
+
+        if (messageType === "file" && (!attachment || !attachment.data)) {
+            return res.status(400).json({ msg: "Attachment payload is required for file message." });
+        }
 
         const data = await messageModal.create({
-            message: {text:message},
+            message: {
+                text: message || "",
+                type: messageType,
+                attachment: attachment || undefined,
+            },
             users:[from,to],
             sender:from,
         });
@@ -35,6 +47,9 @@ module.exports.getAllMessage = async(req,res,next)=>{
             return{
                 fromSelf : msg.sender.toString() === from,
                 message: msg.message.text,
+                messageType: msg.message.type || "text",
+                attachment: msg.message.attachment || null,
+                createdAt: msg.createdAt,
             }
         })
 

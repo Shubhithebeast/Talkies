@@ -4,7 +4,18 @@ const messageSchema = new mongoose.Schema({
     message:{
         text:{
             type:String,
-            required:true,
+            default:"",
+        },
+        type: {
+            type: String,
+            enum: ["text", "file"],
+            default: "text",
+        },
+        attachment: {
+            fileName: { type: String, default: "" },
+            fileType: { type: String, default: "" },
+            fileSize: { type: Number, default: 0 },
+            data: { type: String, default: "" },
         },
     },
     users:Array,

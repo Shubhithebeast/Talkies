@@ -13,7 +13,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 app.use("/api/auth", userRoutes);
 app.use("/api/messages", messageRoutes);
@@ -82,6 +82,7 @@ io.on("connection",(socket)=>{
         onlineUsers.set(userId, socket.id);
         console.log("User added:", userId, "with socket ID:", socket.id);
         console.log("Current online users:", Array.from(onlineUsers.entries()));
+        io.emit("online-users", Array.from(onlineUsers.keys()));
     })
 
     socket.on("send-msg", (data) => {
@@ -90,11 +91,37 @@ io.on("connection",(socket)=>{
         if (sendUserSocket) {
             socket.to(sendUserSocket).emit("msg-receive", {
                 from: data.from,
-                message: data.message
+                message: data.message,
+                messageType: data.messageType || "text",
+                attachment: data.attachment || null,
             });
             console.log("✓ Sent to socket:", sendUserSocket);
         } else {
             console.log("✗ User not found:", data.to);
         }
+    });
+
+    socket.on("typing", ({ from, to }) => {
+        const sendUserSocket = onlineUsers.get(to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("typing", { from });
+        }
+    });
+
+    socket.on("stop-typing", ({ from, to }) => {
+        const sendUserSocket = onlineUsers.get(to);
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("stop-typing", { from });
+        }
+    });
+
+    socket.on("disconnect", () => {
+        for (const [userId, socketId] of onlineUsers.entries()) {
+            if (socketId === socket.id) {
+                onlineUsers.delete(userId);
+                break;
+            }
+        }
+        io.emit("online-users", Array.from(onlineUsers.keys()));
     });
 })
