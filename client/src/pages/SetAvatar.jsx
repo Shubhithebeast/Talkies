@@ -10,8 +10,8 @@ import { useTheme } from '../context/ThemeContext';
 const SetAvatar = () => {
     const { theme } = useTheme();
     
-    console.log("base url: ", process.env.REACT_APP_BASE_URL);
-    const api = `${process.env.REACT_APP_BASE_URL}/api/avatar`;
+    const apiHost = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const api = `${apiHost}/api/avatar`;
     const navigate = useNavigate();
 
     const [avatars,setAvatars] = useState([]);
