@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/chat" element={<Chat/>}  />
           <Route path="/profile" element={<Profile />}  />
           <Route path="/" element={<InitialRedirect />} />
+          <Route path="*" element={<InitialRedirect />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
